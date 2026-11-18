@@ -1,0 +1,280 @@
+{
+  "name": "what-todo",
+  "displayName": "What TODO",
+  "description": "Sniffs TODO comments out of your codebase, lists them, jumps to them and lets you check them off.",
+  "version": "0.1.0",
+  "publisher": "ateering",
+  "private": true,
+  "license": "UNLICENSED",
+  "engines": {
+    "vscode": "^1.80.0",
+    "node": ">=26"
+  },
+  "categories": [
+    "Other"
+  ],
+  "keywords": [
+    "todo",
+    "to-do",
+    "comments",
+    "tasks"
+  ],
+  "main": "./out/extension.js",
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "whatTodo",
+          "title": "What TODO",
+          "icon": "resources/todo.svg"
+        }
+      ]
+    },
+    "views": {
+      "whatTodo": [
+        {
+          "id": "whatTodo.list",
+          "name": "To-dos",
+          "icon": "resources/todo.svg"
+        }
+      ]
+    },
+    "viewsWelcome": [
+      {
+        "view": "whatTodo.list",
+        "contents": "No to-dos found in this workspace.\n[Rescan](command:whatTodo.refresh)"
+      }
+    ],
+    "commands": [
+      {
+        "command": "whatTodo.refresh",
+        "title": "Rescan Workspace",
+        "category": "What TODO",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "whatTodo.list",
+        "title": "List All To-dos",
+        "category": "What TODO",
+        "icon": "$(list-flat)"
+      },
+      {
+        "command": "whatTodo.filter",
+        "title": "Filter To-dos",
+        "category": "What TODO",
+        "icon": "$(filter)"
+      },
+      {
+        "command": "whatTodo.clearFilter",
+        "title": "Clear Filter",
+        "category": "What TODO",
+        "icon": "$(clear-all)"
+      },
+      {
+        "command": "whatTodo.groupByFile",
+        "title": "Group by File",
+        "category": "What TODO",
+        "icon": "$(list-tree)"
+      },
+      {
+        "command": "whatTodo.showFlat",
+        "title": "Show as Flat List",
+        "category": "What TODO",
+        "icon": "$(list-flat)"
+      },
+      {
+        "command": "whatTodo.hideDone",
+        "title": "Hide Checked-off To-dos",
+        "category": "What TODO",
+        "icon": "$(eye-closed)"
+      },
+      {
+        "command": "whatTodo.showDone",
+        "title": "Show Checked-off To-dos",
+        "category": "What TODO",
+        "icon": "$(eye)"
+      },
+      {
+        "command": "whatTodo.checkOff",
+        "title": "Check Off",
+        "category": "What TODO",
+        "icon": "$(check)"
+      },
+      {
+        "command": "whatTodo.uncheck",
+        "title": "Reopen",
+        "category": "What TODO",
+        "icon": "$(discard)"
+      },
+      {
+        "command": "whatTodo.remove",
+        "title": "Remove Comment",
+        "category": "What TODO",
+        "icon": "$(trash)"
+      },
+      {
+        "command": "whatTodo.open",
+        "title": "Go to To-do",
+        "category": "What TODO"
+      }
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "whatTodo.refresh",
+          "when": "view == whatTodo.list",
+          "group": "navigation@1"
+        },
+        {
+          "command": "whatTodo.filter",
+          "when": "view == whatTodo.list",
+          "group": "navigation@2"
+        },
+        {
+          "command": "whatTodo.clearFilter",
+          "when": "view == whatTodo.list && whatTodo.filtered",
+          "group": "navigation@3"
+        },
+        {
+          "command": "whatTodo.showFlat",
+          "when": "view == whatTodo.list && whatTodo.groupByFile",
+          "group": "navigation@4"
+        },
+        {
+          "command": "whatTodo.groupByFile",
+          "when": "view == whatTodo.list && !whatTodo.groupByFile",
+          "group": "navigation@4"
+        },
+        {
+          "command": "whatTodo.hideDone",
+          "when": "view == whatTodo.list && whatTodo.showDone",
+          "group": "navigation@5"
+        },
+        {
+          "command": "whatTodo.showDone",
+          "when": "view == whatTodo.list && !whatTodo.showDone",
+          "group": "navigation@5"
+        },
+        {
+          "command": "whatTodo.list",
+          "when": "view == whatTodo.list",
+          "group": "more@1"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "whatTodo.checkOff",
+          "when": "view == whatTodo.list && viewItem == todo.open",
+          "group": "inline@1"
+        },
+        {
+          "command": "whatTodo.uncheck",
+          "when": "view == whatTodo.list && viewItem == todo.done",
+          "group": "inline@1"
+        },
+        {
+          "command": "whatTodo.open",
+          "when": "view == whatTodo.list && viewItem =~ /^todo\\./",
+          "group": "1_todo@1"
+        },
+        {
+          "command": "whatTodo.checkOff",
+          "when": "view == whatTodo.list && viewItem == todo.open",
+          "group": "1_todo@2"
+        },
+        {
+          "command": "whatTodo.uncheck",
+          "when": "view == whatTodo.list && viewItem == todo.done",
+          "group": "1_todo@2"
+        },
+        {
+          "command": "whatTodo.remove",
+          "when": "view == whatTodo.list && viewItem =~ /^todo\\./",
+          "group": "2_danger@1"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "whatTodo.checkOff",
+          "when": "false"
+        },
+        {
+          "command": "whatTodo.uncheck",
+          "when": "false"
+        },
+        {
+          "command": "whatTodo.remove",
+          "when": "false"
+        },
+        {
+          "command": "whatTodo.open",
+          "when": "false"
+        },
+        {
+          "command": "whatTodo.clearFilter",
+          "when": "whatTodo.filtered"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "What TODO",
+      "properties": {
+        "whatTodo.excludeFolders": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            "node_modules",
+            "vendor",
+            "dist",
+            "out",
+            "build",
+            "coverage",
+            ".git",
+            ".next",
+            ".nuxt",
+            ".cache"
+          ],
+          "description": "Folder names that are never scanned for to-dos."
+        },
+        "whatTodo.maxFileSizeKB": {
+          "type": "number",
+          "default": 1024,
+          "description": "Files larger than this (in KB) are skipped."
+        },
+        "whatTodo.showDone": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show checked-off (DONE) to-dos in the list."
+        },
+        "whatTodo.groupByFile": {
+          "type": "boolean",
+          "default": true,
+          "description": "Group to-dos by file instead of showing a flat list."
+        },
+        "whatTodo.saveAfterCheckOff": {
+          "type": "boolean",
+          "default": true,
+          "description": "Save the file after checking off, reopening or removing a to-do (only if it had no unsaved changes before)."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "build": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "test": "npm run build && node --test out/test/",
+    "package": "npm run test && vsce package --allow-missing-repository --skip-license",
+    "vscode:prepublish": "npm run build"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.6",
+    "@types/vscode": "1.80.0",
+    "@vscode/vsce": "^4.1.1",
+    "typescript": "^7.0.2"
+  }
+}
